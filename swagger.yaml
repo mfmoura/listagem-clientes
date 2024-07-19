@@ -1,0 +1,180 @@
+swagger: '2.0'
+info:
+  contact: {}
+  title: lista-clientes
+  version: 1.0.0
+basePath: /
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: admin@admin.com
+                type: string
+              password:
+                example: '456789'
+                type: string
+            type: object
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Login operations
+      description: "Login and get a valid Bearer Token"
+      operationId: login
+      summary: login
+  /api/auth/logout:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: admin@admin.com
+                type: string
+              password:
+                example: '456789'
+                type: string
+            type: object
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Login operations
+      description: logout
+      operationId: logout
+      summary: logout
+  /api/auth/me:
+    post:
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Login operations
+      description: Me
+      operationId: me
+      summary: Me
+  /api/auth/refresh:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: admin@admin.com
+                type: string
+              password:
+                example: '456789'
+                type: string
+            type: object
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Login operations
+      description: refresh
+      operationId: refresh
+      summary: refresh
+  /api/v1/client:
+    get:
+      parameters:
+        - in: query
+          name: page
+          type: string
+          default: 1
+        - in: query
+          name: per_page
+          type: string
+          default: 10
+      responses:
+        '200':
+          description: 'Result found'
+      description: List subscribed clients
+      operationId: index
+      summary: Index
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            properties:
+              email:
+                example: teste@teste.com
+                type: string
+              name:
+                example: Adalberto
+                type: string
+            type: object
+      responses:
+        '200':
+          description: ''
+      description: Store
+      operationId: store
+      summary: Store
+  /api/v1/client/{clientId}:
+    delete:
+      parameters:
+      - in: path
+        name: clientId
+        type: integer
+        required: true
+        description: Numeric ID of the user to get
+      responses:
+        '200':
+          description: ''
+      description: Delete
+      operationId: delete
+      summary: Delete
+    get:
+      parameters:
+      - in: path
+        name: clientId
+        type: integer
+        required: true
+        description: Numeric ID of the user to get
+      responses:
+        '200':
+          description: ''
+      description: Show
+      operationId: show
+      summary: Show
+    put:
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: clientId
+          type: integer
+          required: true
+          description: Numeric ID of the user to get
+        - in: body
+          name: body
+          schema:
+            properties:
+              income:
+                example: 9851.71
+                type: number
+            type: object
+      responses:
+        '200':
+          description: ''
+      description: Update
+      operationId: update
+      summary: Update
+tags:
+  - name: Login operations
