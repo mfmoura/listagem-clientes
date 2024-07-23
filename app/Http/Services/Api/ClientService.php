@@ -27,11 +27,11 @@ final class ClientService
         return new ClientResource($client);
     }
 
-    public static function show($client){
+    public static function show(Client $client){
         return new ClientResource($client);
     }
 
-    public static function update($request, $client){
+    public static function update($request, Client $client){
         $client->fill(
             $request->only(
                 'name',
@@ -48,7 +48,7 @@ final class ClientService
 
     }
 
-    public static function destroy($client){
+    public static function destroy(Client $client){
         $client->delete();
 
         return response('', 204);

@@ -1,9 +1,9 @@
 swagger: '2.0'
 info:
   contact: {}
-  title: lista-clientes
+  title: Client Listing
   version: 1.0.0
-basePath: /
+basePath: '/'
 paths:
   /api/auth/login:
     post:
@@ -25,32 +25,48 @@ paths:
         '200':
           description: ''
       tags:
-        - Login operations
-      description: "Login and get a valid Bearer Token"
+        - Login
+      description: |-
+        ### Login API
+
+        This API endpoint allows users to authenticate and login to the system.
+
+        #### Request Body
+
+        - `email` (string, required): The email address of the user.
+        - `password` (string, required): The password of the user.
+            
+
+        #### Response
+
+        The response for this request will be a JSON object conforming to the following schema:
+
+        ``` json
+        {
+            "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzIxNzAyNTc1LCJleHAiOjE3MjE3MDYxNzUsIm5iZiI6MTcyMTcwMjU3NSwianRpIjoibTlYOTMwdnJUSlRFZFZSbiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.SsQmb9gQD8n3DZkYY9WWtfVihlBcQbumlQOZamhmupA",
+            "token_type": "bearer",
+            "expires_in": 3600
+        }
+
+         ```
       operationId: login
       summary: login
   /api/auth/logout:
     post:
       consumes:
-        - application/json
+        - text/plain
       parameters:
         - in: body
           name: body
           schema:
-            properties:
-              email:
-                example: admin@admin.com
-                type: string
-              password:
-                example: '456789'
-                type: string
-            type: object
+            format: binary
+            type: string
       responses:
         '200':
           description: ''
       tags:
-        - Login operations
-      description: logout
+        - Login
+      description: This endpoint is used to log out the authenticated user. Upon successful logout, the response will be a JSON schema describing the structure of the response data.
       operationId: logout
       summary: logout
   /api/auth/me:
@@ -60,49 +76,146 @@ paths:
         '200':
           description: ''
       tags:
-        - Login operations
-      description: Me
+        - Login
+      description: |-
+        This endpoint allows the user to retrieve the authenticated user's information. The response returns a JSON object with the user's details including id, name, email, email_verified_at, created_at, and updated_at.
+
+        ``` json
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "email_verified_at": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            }
+          }
+        }
+
+         ```
       operationId: me
       summary: Me
   /api/auth/refresh:
     post:
       consumes:
-        - application/json
+        - text/plain
       parameters:
         - in: body
           name: body
           schema:
-            properties:
-              email:
-                example: admin@admin.com
-                type: string
-              password:
-                example: '456789'
-                type: string
-            type: object
+            format: binary
+            type: string
       responses:
         '200':
           description: ''
       tags:
-        - Login operations
-      description: refresh
+        - Login
+      description: |-
+        ### Refresh Authentication Token
+
+        This endpoint allows the user to refresh the authentication token by sending a POST request to the specified URL.
+
+        #### Response
+
+        The response for this request is a JSON schema with the following structure:
+
+        ``` json
+        {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          }
+        }
+
+         ```
       operationId: refresh
       summary: refresh
   /api/v1/client:
     get:
       parameters:
-        - in: query
+        - description: Page index
+          in: query
           name: page
           type: string
-          default: 1
-        - in: query
+        - description: How many results per page
+          in: query
           name: per_page
           type: string
-          default: 10
       responses:
         '200':
-          description: 'Result found'
-      description: List subscribed clients
+          description: ''
+      tags:
+        - Clients
+      description: |-
+        ### GET /api/v1/client
+
+        This endpoint retrieves a list of clients.
+
+        #### Request
+
+        This is a simple GET request that does not require a request body.
+
+        #### Response
+
+        The response is a JSON object with the following schema:
+
+        ``` json
+        {
+          "data": [
+            {
+              "id": "number",
+              "name": "string",
+              "address": "string",
+              "email": "string",
+              "position": "string",
+              "income": "string",
+              "created_at": "string",
+              "updated_at": "string"
+            }
+          ],
+          "links": {
+            "first": "string",
+            "last": "string",
+            "prev": "string",
+            "next": "string"
+          },
+          "meta": {
+            "current_page": "number",
+            "from": "number",
+            "last_page": "number",
+            "links": [
+              {
+                "url": "string",
+                "label": "string",
+                "active": "boolean"
+              }
+            ],
+            "path": "string",
+            "per_page": "number",
+            "to": "number",
+            "total": "number"
+          }
+        }
+
+         ```
       operationId: index
       summary: Index
     post:
@@ -113,68 +226,180 @@ paths:
           name: body
           schema:
             properties:
+              address:
+                example: Sesame Street, 52
+                type: string
               email:
                 example: teste@teste.com
                 type: string
+              income:
+                example: 100.25
+                type: number
               name:
                 example: Adalberto
+                type: string
+              position:
+                example: Engineer
                 type: string
             type: object
       responses:
         '200':
           description: ''
-      description: Store
+      tags:
+        - Clients
+      description: |-
+        The `POST /api/v1/client` endpoint is used to create a new client. The request should include a JSON payload with the client's name, email, address, position, and income.
+
+        ### Request Body
+
+        - `name` (string, required): The name of the client.
+        - `email` (string, required): The email address of the client.
+        - `address` (string): The address of the client.
+        - `position` (string): The position of the client.
+        - `income` (number): The income of the client.
+            
+
+        ### Response
+
+        ``` json
+        {
+          "data": {
+            "id": 0,
+            "name": "",
+            "address": "",
+            "email": "",
+            "position": "",
+            "income": 0,
+            "created_at": "",
+            "updated_at": ""
+          }
+        }
+
+         ```
       operationId: store
       summary: Store
-  /api/v1/client/{clientId}:
-    delete:
-      parameters:
+  /api/v1/client/{id}:
+    parameters:
       - in: path
-        name: clientId
-        type: integer
+        name: id
         required: true
-        description: Numeric ID of the user to get
+        type: string
+    delete:
+      parameters: []
       responses:
         '200':
           description: ''
-      description: Delete
+      tags:
+        - Clients
+      description: |-
+        # Delete Client
+
+        This endpoint is used to delete a specific client by providing the client's ID.
+
+        ## Request
+
+        - Method: DELETE
+        - URL: `/api/v1/client/`
+        - Path Parameters:
+            - `id`: The unique identifier of the client to be deleted.
+
+        ## Response
+
+        The response for this request is a JSON schema, which will define the structure of the response body. The schema will outline the properties and their data types that will be returned upon successful deletion of the client.
       operationId: delete
       summary: Delete
     get:
-      parameters:
-      - in: path
-        name: clientId
-        type: integer
-        required: true
-        description: Numeric ID of the user to get
+      parameters: []
       responses:
         '200':
           description: ''
-      description: Show
+      tags:
+        - Clients
+      description: |
+
+        The endpoint retrieves client information based on the provided ID. 
+
+        The response schema for this request is as follows:
+
+        ```json
+        {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "name": {"type": "string"},
+                        "address": {"type": ["string", "null"]},
+                        "email": {"type": "string"},
+                        "position": {"type": ["string", "null"]},
+                        "income": {"type": "string"},
+                        "created_at": {"type": "string"},
+                        "updated_at": {"type": "string"}
+                    }
+                }
+            }
+        }
+        ```
       operationId: show
       summary: Show
     put:
       consumes:
         - application/json
       parameters:
-        - in: path
-          name: clientId
-          type: integer
-          required: true
-          description: Numeric ID of the user to get
         - in: body
           name: body
           schema:
             properties:
+              address:
+                example: Sesame Street, 52
+                type: string
+              email:
+                example: teste@teste.com
+                type: string
               income:
-                example: 9851.71
+                example: 100.25
                 type: number
+              name:
+                example: Adalberto
+                type: string
+              position:
+                example: Engineer
+                type: string
             type: object
       responses:
         '200':
           description: ''
-      description: Update
+      tags:
+        - Clients
+      description: |-
+        The API updates a client's information using the HTTP PUT method. It expects a JSON payload in the request body with the fields name, email, address, position, and income. The response will have a status code of 200 and a content type of application/json. The response body will be a JSON object with the data field containing the updated client information, including id, name, address, email, position, income, created_at, and updated_at.
+
+        ``` json
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "integer"},
+                "name": {"type": "string"},
+                "address": {"type": "string"},
+                "email": {"type": "string"},
+                "position": {"type": "string"},
+                "income": {"type": "number"},
+                "created_at": {"type": "string"},
+                "updated_at": {"type": "string"}
+              }
+            }
+          }
+        }
+
+         ```
       operationId: update
       summary: Update
 tags:
-  - name: Login operations
+  - description: Login operations
+    name: Login
+  - description: Clients operations
+    name: Clients
